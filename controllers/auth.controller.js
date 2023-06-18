@@ -278,6 +278,7 @@ export default class AuthController {
       // 3) If so, update password
       user.password = req.body.password;
       user.passwordConfirm = req.body.passwordConfirm;
+
       await user.save(); // must use save so all validation runs
 
       // 4) Log user in and send token

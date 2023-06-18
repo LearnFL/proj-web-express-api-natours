@@ -24,7 +24,7 @@ export default class UserServices {
     // must add password to output since by default it is not selected
     return await User.findOne({
       _id: id,
-    });
+    }).select('+password');
   }
 
   static async findUserById(id) {
