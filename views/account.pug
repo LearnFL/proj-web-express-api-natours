@@ -31,11 +31,13 @@ block content
                     h2.heading-secondary.ma-bt-md Your account settings
 
                     //- WITHOUT API
-                    //- use multipart/form-data when your form includes any <input type="file"> elements
                     //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
+        
+                    //- Without API
+                    //- form.form.form-user-data(action='/submit-user-data' method='POST')
 
                     //- WITH API
-                    form.form.form-user-data(action='/submit-user-data' method='POST')
+                    form.form.form-user-data
                         .form__group
                             label.form__label(for='name') Name
                             input#name.form__input(type='text', value=`${user.name}`, required, name='name')
