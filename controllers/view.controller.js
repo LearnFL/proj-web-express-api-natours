@@ -1,5 +1,6 @@
 import AppError from '../utils/appError.js';
 import TourServices from '../DAO/tour.DAO.js';
+import UserServices from '../DAO/user.DAO.js';
 import { async } from 'regenerator-runtime';
 
 export default class ViewController {
@@ -28,5 +29,27 @@ export default class ViewController {
 
   static getAccount(req, res) {
     res.status(200).render('account', { title: 'Your account' });
+  }
+
+  // USING FORM WITHOUT API
+  static async submitUserData(req, res, next) {
+    try {
+      const updatedUser = await UserServices.findAndUpdate(
+        req.user.id,
+        ...[
+          {
+            name: req.body.name,
+            email: req.body.email,
+          },
+          { new: true, runValidators: true },
+        ]
+      );
+
+      res
+        .status(200)
+        .render('account', { title: 'Your account', user: updatedUser });
+    } catch (err) {
+      next();
+    }
   }
 }

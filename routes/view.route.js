@@ -13,4 +13,10 @@ router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour);
 router.get('/login', AuthController.isLoggedIn, ViewController.getLoginForm);
 router.get('/me', AuthController.protect, ViewController.getAccount);
 
+router.post(
+  '/submit-user-data',
+  AuthController.protect,
+  ViewController.submitUserData
+);
+
 export { router as viewRoute };

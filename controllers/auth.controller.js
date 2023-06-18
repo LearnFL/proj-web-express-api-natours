@@ -135,6 +135,38 @@ export default class AuthController {
     }
   }
 
+  // only for rendered pages
+  static async isLoggedIn(req, res, next) {
+    if (req.cookies.jwt) {
+      try {
+        // 1) verify token
+        const decoded = await promisify(jwt.verify)(
+          req.cookies.jwt,
+          process.env.JWT_SECRET
+        );
+
+        // 2) Check if user still exists
+        const currentUser = await UserServices.findUserById(decoded.id);
+
+        if (!currentUser) {
+          return next();
+        }
+
+        // 3) Check if user changed password after the token was issued
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+          return next();
+        }
+
+        // THERE IS A LOGGED IN USER
+        res.locals.user = currentUser;
+        return next();
+      } catch (err) {
+        return next();
+      }
+    }
+    next();
+  }
+
   static restrictTo(...roles) {
     return (req, res, next) => {
       // roles ['admin', 'lead-guide']
@@ -253,37 +285,5 @@ export default class AuthController {
     } catch (err) {
       next(err);
     }
-  }
-
-  // only for rendered pages
-  static async isLoggedIn(req, res, next) {
-    if (req.cookies.jwt) {
-      try {
-        // 1) verify token
-        const decoded = await promisify(jwt.verify)(
-          req.cookies.jwt,
-          process.env.JWT_SECRET
-        );
-
-        // 2) Check if user still exists
-        const currentUser = await UserServices.findUserById(decoded.id);
-
-        if (!currentUser) {
-          return next();
-        }
-
-        // 3) Check if user changed password after the token was issued
-        if (currentUser.changedPasswordAfter(decoded.iat)) {
-          return next();
-        }
-
-        // THERE IS A LOGGED IN USER
-        res.locals.user = currentUser;
-        return next();
-      } catch (err) {
-        return next();
-      }
-    }
-    next();
   }
 }

@@ -32,6 +32,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 ///////////////// MIDDLEWARE ////////////////
 
+app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
+
+// Middleware to modify request, enables server to read amnnd accept JSON in request's body
+app.use(express.json({ limit: '10kb' }));
+
+// Cookie Parser
+app.use(cookieParser());
+
 // app.use(helmet());
 // app.use(
 //   helmet({
@@ -88,14 +96,6 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter); // apply to api root
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Middleware to modify request, enables server to read amnnd accept JSON in request's body
-app.use(express.json({ limit: '10kb' }));
-
-// Cookie Parser
-app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection (filters out dots and $ signs)
 app.use(mongoSanitize());
