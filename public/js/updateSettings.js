@@ -22,3 +22,5 @@ export const updateSettings = async (data, type) => {
     showAlert('error', err.response.data.message);
   }
 };
+
+//dfkgofdlk
