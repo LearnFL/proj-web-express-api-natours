@@ -1,6 +1,8 @@
 import Router from 'express';
+
 import AuthController from '../controllers/auth.controller.js';
 import UsersController from '../controllers/users.controller.js';
+import { upload } from '../controllers/users.controller.js';
 
 const router = new Router();
 
@@ -19,7 +21,8 @@ router.get(
   UsersController.getUser
 );
 
-router.patch('/updateMe', AuthController.protect, UsersController.updateMe);
+// upload single file from field callesd photo, it will put info about image on request req.file
+router.patch('/updateMe', upload.single('photo'), UsersController.updateMe);
 router.patch('/updateMyPassword', AuthController.updatePassword);
 router.delete('/deleteMe', UsersController.deleteMe);
 

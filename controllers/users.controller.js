@@ -1,11 +1,39 @@
-// import jwt from 'jsonwebtoken';
+import multer from 'multer';
 import UserServices from '../DAO/user.DAO.js';
 import AppError from '../utils/appError.js';
 
-// const signToken = (id) =>
-//   jwt.sign({ id: id }, process.env.JWT_SECRET, {
-//     expiresIn: process.env.JWT_EXPIRES_IN,
-//   });
+const multerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/img/users');
+  },
+  filename: function (req, file, cb) {
+    // user-id-timeStamp.jpg
+    cb(
+      null,
+      `user-${req.user.id}-${Date.now()}.${file.mimetype.split('/')[1]}`
+    );
+  },
+});
+
+// TO make sure only images are uploaded
+const multerFilter = (req, file, cb) => {
+  if (
+    // file.mimetype.startsWith('image')
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+// const upload = multer({ dest: 'public/img/users' });
+export const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -55,6 +83,8 @@ export default class UsersController {
   }
 
   static async updateMe(req, res, next) {
+    console.log(req.file);
+    console.log(req.body);
     // 1) Create Error if user POSTs password data
     if (req.body.password || req.body.passwordConfirm) {
       return next(
