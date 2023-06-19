@@ -38,6 +38,7 @@ if (userDataForm) {
     const email = document.getElementById('email').value;
     const name = document.getElementById('name').value;
     await updateSettings({ name, email }, 'data');
+    document.querySelector('.nav__user-name').textContent = name.split(' ')[0];
     document.querySelector('.btn--save-settings').textContent = 'SAVE SETTINGS';
   });
 }

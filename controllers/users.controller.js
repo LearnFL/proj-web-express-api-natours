@@ -101,6 +101,7 @@ export default class UsersController {
 
     // must specify fields as someone may change role to admin
     const filteredBody = filterObj(req.body, 'name', 'email');
+    if (req.file) filteredBody.photo = req.file.filename;
 
     try {
       const updatedUser = await UserServices.findAndUpdate(
