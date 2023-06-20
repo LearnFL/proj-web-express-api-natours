@@ -1,19 +1,22 @@
 import multer from 'multer';
+import sharp from 'sharp';
 import UserServices from '../DAO/user.DAO.js';
 import AppError from '../utils/appError.js';
 
-const multerStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/img/users');
-  },
-  filename: function (req, file, cb) {
-    // user-id-timeStamp.jpg
-    cb(
-      null,
-      `user-${req.user.id}-${Date.now()}.${file.mimetype.split('/')[1]}`
-    );
-  },
-});
+// const multerStorage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'public/img/users');
+//   },
+//   filename: function (req, file, cb) {
+//     // user-id-timeStamp.jpg
+//     cb(
+//       null,
+//       `user-${req.user.id}-${Date.now()}.${file.mimetype.split('/')[1]}`
+//     );
+//   },
+// });
+
+const multerStorage = multer.memoryStorage(); // save as buffer for sharp()
 
 // TO make sure only images are uploaded
 const multerFilter = (req, file, cb) => {
@@ -82,9 +85,26 @@ export default class UsersController {
     }
   }
 
+  static async resizeUserPhoto(req, res, next) {
+    if (!req.file) return next();
+
+    /* 
+    Put filename on request since it is not done automatically after switched to memoryStorage from diskStorage.
+    No need to specify ext as sharp()
+    */
+    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+    // Resize avatar
+    await sharp(req.file.buffer)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/users/${req.file.filename}`);
+
+    next();
+  }
+
   static async updateMe(req, res, next) {
-    console.log(req.file);
-    console.log(req.body);
     // 1) Create Error if user POSTs password data
     if (req.body.password || req.body.passwordConfirm) {
       return next(
@@ -113,7 +133,7 @@ export default class UsersController {
       res.status(200).json({
         status: 'success',
         requestedAt: req.requestTime,
-        token: req.token,
+        // token: req.token,
         data: { user: updatedUser },
       });
     } catch (err) {

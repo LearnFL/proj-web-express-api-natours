@@ -22,7 +22,12 @@ router.get(
 );
 
 // upload single file from field callesd photo, it will put info about image on request req.file
-router.patch('/updateMe', upload.single('photo'), UsersController.updateMe);
+router.patch(
+  '/updateMe',
+  upload.single('photo'),
+  UsersController.resizeUserPhoto,
+  UsersController.updateMe
+);
 router.patch('/updateMyPassword', AuthController.updatePassword);
 router.delete('/deleteMe', UsersController.deleteMe);
 
