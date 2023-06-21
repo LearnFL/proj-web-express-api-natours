@@ -1,5 +1,36 @@
 import TourServices from '../DAO/tour.DAO.js';
+import multer from 'multer';
+import sharp from 'sharp';
 import AppError from '../utils/appError.js';
+
+const multerStorage = multer.memoryStorage(); // save as buffer for sharp()
+
+// TO make sure only images are uploaded
+const multerFilter = (req, file, cb) => {
+  if (
+    // file.mimetype.startsWith('image')
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+// const upload = multer({ dest: 'public/img/users' });
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+// upload.single('image') ONE IMAGE
+// upload.array('images', 5) MULTIPLE IMAGES
+export const uploadTourImage = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
 
 export default class ToursController {
   // Middleware
@@ -7,6 +38,48 @@ export default class ToursController {
     req.query.limit = '5';
     req.query.sort = '-ratingsAverage,price';
     req.fields = 'name,price,ratingsAverage,summary,difficultry';
+    next();
+  }
+
+  static async resizeTourImages(req, res, next) {
+    if (!req.files.imageCover || !req.files.images) return next();
+    // upload.songle('image') req.file
+    // upload.fields('images) req.files;
+
+    // 1) CoverImage
+    const imageCoverFileName = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
+    // add to req.body as we pass req.body to DAO
+    req.body.imageCover = imageCoverFileName;
+
+    await sharp(req.files.imageCover[0].buffer)
+      .resize(2000, 1333)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/tours/${imageCoverFileName}`);
+
+    // 2) Images
+    req.body.images = [];
+
+    /*
+    async await inside callback will not prevent code fram calling on next()
+    for this reason instead of forEach we will use map() and use await.all()
+    to wait untill all promises are resolved and then move to next()
+    */
+    await Promise.all(
+      req.files.images.map(async (file, i) => {
+        const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+        await sharp(req.files.images[i].buffer)
+          .resize(2000, 1333)
+          .toFormat('jpeg')
+          .jpeg({ quality: 90 })
+          .toFile(`public/img/tours/${filename}`);
+
+        req.body.images.push(filename);
+      })
+    );
+
     next();
   }
 

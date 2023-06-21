@@ -1,6 +1,7 @@
 import Router from 'express';
 import AuthController from '../controllers/auth.controller.js';
 import ToursController from '../controllers/tours.controller.js';
+import { uploadTourImage } from '../controllers/tours.controller.js';
 import { reviewsRoute } from './reviews.route.js';
 
 const router = new Router();
@@ -54,6 +55,8 @@ router.patch(
   '/:id',
   AuthController.protect,
   AuthController.restrictTo('admin', 'lead-guide'),
+  uploadTourImage,
+  ToursController.resizeTourImages,
   ToursController.updateOneTour
 );
 
