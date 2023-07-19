@@ -37,13 +37,20 @@ export default class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.#from = `Admin Natours <${process.env.EMAIL_FROM}>`;
+    this.#from = `Admin Natours <${process.env.EMAIL_FROM_SENDGRID}>`;
   }
 
   createTransport() {
     if (process.env.NODE_ENV === 'production') {
       // Sendgrid
-      return 1;
+      return nodemailer.createTransport({
+        host: process.env.SENDGRID_HOST,
+        port: process.env.SENDGRID_PORT,
+        auth: {
+          user: process.env.SENDGRID_USERNAME,
+          pass: process.env.SENDGRID_PASSWORD,
+        },
+      });
     }
 
     return nodemailer.createTransport({
@@ -67,7 +74,7 @@ export default class Email {
 
     // 2) Define options for email
     const mailOptions = {
-      from: this.from,
+      from: this.#from,
       to: this.to,
       subject,
       html,
