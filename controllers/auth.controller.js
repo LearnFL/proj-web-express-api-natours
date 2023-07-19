@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import UserServices from '../DAO/user.DAO.js';
 import {} from 'dotenv/config';
 import AppError from '../utils/appError.js';
-import { sendEmail } from '../utils/email.js';
+import Email from '../utils/email.js';
 
 const signToken = (id) =>
   jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -43,6 +43,9 @@ export default class AuthController {
     try {
       const newUser = await UserServices.createNewUser(req);
       //Create token: payload, secret, expiration (10d, 5h, 5m, 3s)
+
+      const url = `${req.protocol}://${req.get('host')}/me`;
+      await new Email(newUser, url).sendWelcome();
       createAndSendToken(newUser, 201, res);
     } catch (err) {
       next(err);
@@ -70,13 +73,6 @@ export default class AuthController {
       200,
       res
     );
-    // const token = signToken(user._id);
-
-    // res.status(200).json({
-    //   status: 'success',
-    //   token,
-    //   data: { user: { _id: user._id, name: user.name, email: user.email } },
-    // });
   }
 
   static logout(req, res, next) {
@@ -191,19 +187,17 @@ export default class AuthController {
       // User data has been modified but now it needs saved
       await user.save({ validateBeforeSave: false });
 
-      // 3) send it back as email
+      // 3) send it back as email API
+      // const resetURL = `${req.protocol}://${req.get(
+      //   'host'
+      // )}/api/v1/users/resetPassword/${resetToken}`;
+
       const resetURL = `${req.protocol}://${req.get(
         'host'
-      )}/api/v1/users/resetPassword/${resetToken}`;
-
-      const message = `Forgot your password? Submit patch request with your new password and passwordConfirm to: ${resetURL}.\nIf you did not request password reset please ignore this message`;
+      )}/resetPassword/#${resetToken}`;
 
       try {
-        await sendEmail({
-          email: user.email,
-          subject: 'Your password reset token (valid for 10 minutes)',
-          message,
-        });
+        await new Email(user, resetURL).sendPasswordReset();
       } catch (err) {
         // For security reset data
         user.passwordResetToken = undefined;
@@ -250,9 +244,7 @@ export default class AuthController {
 
       // Update changedPasswordAt property of schema
       // 5) log in user in and send JWT token
-      const token = signToken(user._id);
-
-      res.status(200).json({ status: 'success', token });
+      res.status(200).json({ status: 'success' });
     } catch (err) {
       next(err);
     }

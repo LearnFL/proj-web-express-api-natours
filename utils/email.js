@@ -2,8 +2,8 @@
 import nodemailer from 'nodemailer';
 import {} from 'dotenv/config';
 import pug from 'pug';
-import currDir from '../helper.js';
-import htmlToText from 'html-to-text';
+import { currDir } from '../helper.js';
+import { htmlToText } from 'html-to-text';
 
 const __dirname = currDir();
 
@@ -58,10 +58,12 @@ export default class Email {
 
   async send(template, subject) {
     // 1) Render HTML based template
-    const html = pug.renderFile(
-      `${__dirname}/../views/emails/${template}.pug`,
-      { firstName: this.firstName, url: this.url, subject }
-    );
+
+    const html = pug.renderFile(`${__dirname}/views/emails/${template}.pug`, {
+      firstName: this.firstName,
+      url: this.url,
+      subject,
+    });
 
     // 2) Define options for email
     const mailOptions = {
@@ -69,7 +71,7 @@ export default class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html), // npm i html-to-text
+      text: htmlToText(html), // npm i html-to-text
     };
 
     // 3) Create a transport and send email
@@ -78,5 +80,12 @@ export default class Email {
 
   async sendWelcome() {
     await this.send('welcome', 'Welcome to Natours');
+  }
+
+  async sendPasswordReset() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token. Valid for 10 minutes'
+    );
   }
 }

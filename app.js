@@ -49,7 +49,7 @@ app.use(cookieParser());
 
 app.use(
   helmet({
-    hsts: false, // hsts: isProd ? true : false
+    hsts: process.env.NODE_ENV !== 'production' ? true : false,
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'], //

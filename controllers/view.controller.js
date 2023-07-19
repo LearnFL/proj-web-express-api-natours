@@ -52,4 +52,8 @@ export default class ViewController {
       next();
     }
   }
+
+  static async getResetPasswordForm(req, res, next) {
+    res.status(200).render('resetPassword', { title: 'Reset your password' });
+  }
 }

@@ -13,6 +13,8 @@ router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour);
 router.get('/login', AuthController.isLoggedIn, ViewController.getLoginForm);
 router.get('/me', AuthController.protect, ViewController.getAccount);
 
+router.get('/resetPassword/', ViewController.getResetPasswordForm);
+
 // WITHOUT API
 router.post(
   '/submit-user-data',
