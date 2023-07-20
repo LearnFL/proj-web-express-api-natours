@@ -16,6 +16,11 @@ export default class TourServices {
     return await Tour.findById(id).populate('reviews');
   }
 
+  // For checkout session
+  static async findOneTourById(id) {
+    return await Tour.findById(id);
+  }
+
   static async createOneTour(req) {
     return await Tour.create(req);
   }

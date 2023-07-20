@@ -12,6 +12,7 @@ import { viewRoute } from './routes/view.route.js';
 import { toursRoute } from './routes/tours.route.js';
 import { usersRoute } from './routes/users.route.js';
 import { reviewsRoute } from './routes/reviews.route.js';
+import { bookingsRoute } from './routes/bookings.route.js';
 import { currDir } from './helper.js';
 import {} from 'dotenv/config';
 import AppError from './utils/appError.js';
@@ -133,6 +134,7 @@ app.use('/', viewRoute);
 app.use('/api/v1/tours', toursRoute);
 app.use('/api/v1/users', usersRoute);
 app.use('/api/v1/reviews', reviewsRoute);
+app.use('/api/v1/bookings', bookingsRoute);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
