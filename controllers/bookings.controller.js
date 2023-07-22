@@ -31,7 +31,7 @@ export default class BookingsController {
                 name: `${tour.name} Tour`,
                 description: tour.summary,
                 images: [
-                  `https://www.natours.dev/img/tours/${tour.imageCover}.jpg`,
+                  `https://www.natours.dev/img/tours/${tour.imageCover}`,
                 ], // must use live images hosted online
               },
             },
@@ -43,6 +43,7 @@ export default class BookingsController {
 
       // 3) Create session as response
       res.status(200).json({ status: 'success', session });
+      // res.redirect(303, session.url);
     } catch (err) {
       new AppError(err.message, 500);
     }

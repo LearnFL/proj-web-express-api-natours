@@ -5,6 +5,7 @@ import { displayMap } from './mapbox.js';
 import { login, logout } from './login.js';
 import { updateSettings } from './updateSettings.js';
 import { resetPassword } from './resetPassword.js';
+import { bookTour } from './stripe.js';
 
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
@@ -12,6 +13,7 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const resetPasswordForm = document.querySelector('.form--reset-password');
+const bookBtn = document.getElementById('book-tour');
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -82,5 +84,18 @@ if (resetPasswordForm) {
 
     document.getElementById('email').value = '';
     document.getElementById('password').value = '';
+  });
+}
+
+if (bookBtn) {
+  bookBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.target.textContent = 'Processing...';
+    const tourId = e.target.dataset.tourId; // converted to camelCase
+    /*
+    OR USE DESTRUCTURING
+    const {tourId} = e.target.dataset
+    */
+    await bookTour(tourId);
   });
 }
