@@ -1,5 +1,6 @@
 import AppError from '../utils/appError.js';
 import TourServices from '../DAO/tour.DAO.js';
+import BookingServices from '../DAO/booking.DAO.js';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -17,7 +18,12 @@ export default class BookingsController {
       // 2) Create checkout session
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url: `${req.protocol}://${req.get('host')}/`,
+
+        // FIXME Temp solution, not secure, may call URL without checkout
+        success_url: `${req.protocol}://${req.get('host')}/?tour=${
+          req.params.tourId
+        }&user=${req.user.id}&price=${tour.price}`,
+
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         customer_email: req.user.email,
         client_reference_id: req.params.tourId, // to create booking in DB
@@ -46,6 +52,26 @@ export default class BookingsController {
       // res.redirect(303, session.url);
     } catch (err) {
       new AppError(err.message, 500);
+    }
+  }
+
+  static async createBookingCheckout(req, res, next) {
+    try {
+      // REMEMBER THIS IS TEMPORARY, UNSECURE, ONE CAN MAKE BOOKINGS WITHOUT PAYING
+      const { tour, user, price } = req.query;
+
+      // NEXT() WILL LOAD HOME PAGE SO IT NEEDS TO BE CALLED FROM VIEWS ROUTE
+      if (!tour && !user && !price) {
+        return next();
+      }
+
+      await BookingServices.create({ tour, user, price });
+      // next(); not ideal as it exposes a lot of datain query from temporary SUCCESS URL
+      // or use `${req.protocol}://${req.get('host')}/?tour=${req.params.tourid}&user=${req.userId}&price=${tour.price}`
+      res.redirect(req.originalUrl.split('?')[0]);
+    } catch (err) {
+      // new AppError(err.message, 500);
+      console.error(err);
     }
   }
 }

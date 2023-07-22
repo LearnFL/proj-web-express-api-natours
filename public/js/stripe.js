@@ -1,11 +1,13 @@
 // REMEMBER Must add Stripe script ot tour.pug
 import axios from 'axios';
 import { showAlert } from './alerts';
-// import Stripe from 'stripe';
 
-const stripe = Stripe(process.env.STRIPE_PUBLIC_KEY);
+// npm install @stripe/stripe-js
+import { loadStripe } from '@stripe/stripe-js/';
 
 export const bookTour = async (tourId) => {
+  const stripe = await loadStripe(process.env.STRIPE_PUBLIC_KEY);
+  // const stripe = Stripe(process.env.STRIPE_PUBLIC_KEY);
   try {
     // 1) Get session from the server
     const session = await axios(

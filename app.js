@@ -63,6 +63,8 @@ app.use(
           'https://cdnjs.cloudflare.com',
           'https://js.stripe.com/v3/',
           "'unsafe-inline'",
+          'https://unpkg.com/axios/dist/axios.min.js',
+          'https://*.stripe.com/',
         ],
         'connect-src': [
           "'self'",
