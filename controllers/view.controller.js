@@ -1,7 +1,9 @@
 import AppError from '../utils/appError.js';
 import TourServices from '../DAO/tour.DAO.js';
 import UserServices from '../DAO/user.DAO.js';
+import BookingServices from '../DAO/booking.DAO.js';
 import { async } from 'regenerator-runtime';
+import BookingsController from './bookings.controller.js';
 
 export default class ViewController {
   static async getOverview(req, res, next) {
@@ -55,5 +57,17 @@ export default class ViewController {
 
   static async getResetPasswordForm(req, res, next) {
     res.status(200).render('resetPassword', { title: 'Reset your password' });
+  }
+
+  static async getMyTours(req, res, next) {
+    // REMEMBER MAY USE VERTUAL POPULATE ON TOURS INSTEAD
+    // 1) Find Bookings by user ID
+    const bookings = await BookingServices.find({ user: req.user.id });
+
+    // 2) Find tours with returned IDs
+    const tourIDs = bookings.map((booking) => booking.tour);
+    const tours = await TourServices.find({ _id: { $in: tourIDs } });
+
+    res.status(200).render('overview', { title: 'My Tours', tours });
   }
 }

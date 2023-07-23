@@ -126,4 +126,8 @@ export default class TourServices {
       fields: 'review rating user',
     });
   }
+
+  static async find(data) {
+    return await Tour.find(data);
+  }
 }
