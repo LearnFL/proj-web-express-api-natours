@@ -74,4 +74,78 @@ export default class BookingsController {
       console.error(err);
     }
   }
+
+  static async find(req, res, next) {
+    try {
+      let bookings;
+
+      if (req.params.id) {
+        bookings = await BookingServices.find({ _id: req.params.id });
+
+        if (!bookings) {
+          return next(new AppError('No Booking found with that ID', 404));
+        }
+
+        return res
+          .status(200)
+          .json({ status: 'success', data: { data: bookings } });
+      }
+
+      bookings = await BookingServices.find();
+      res.status(200).json({ status: 'success', data: { data: bookings } });
+    } catch (err) {
+      new AppError(err.message, 500);
+    }
+  }
+
+  static async create(req, res, next) {
+    try {
+      const booking = await BookingServices.create(req.body);
+
+      return res
+        .status(201)
+        .json({ status: 'success', data: { data: booking } });
+    } catch (err) {
+      new AppError(err.message, 500);
+    }
+  }
+
+  static async updateOne(req, res, next) {
+    try {
+      const booking = await BookingServices.findOneAndUpdate(
+        req.params.id,
+        req.body
+      );
+
+      if (!booking) {
+        return next(new AppError('No booking found with that ID', 404));
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          data: booking,
+        },
+      });
+    } catch (err) {
+      new AppError(err.message, 500);
+    }
+  }
+
+  static async deleteOne(req, res, next) {
+    try {
+      const booking = await BookingServices.findByIdAndDelete(req.params.id);
+
+      if (!booking) {
+        return next(new AppError('No booking found with that ID', 404));
+      }
+
+      res.status(204).json({
+        status: 'success',
+        data: null,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }

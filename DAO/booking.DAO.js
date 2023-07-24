@@ -4,7 +4,17 @@ export default class BookingServices {
   static async create(data) {
     return await Booking.create(data);
   }
-  static async find(data) {
-    return await Booking.find(data);
+
+  static async findByIdAndDelete(id) {
+    return await Booking.findByIdAndDelete(id);
+  }
+
+  static async find(id = null) {
+    if (id) return await Booking.findById(id);
+    return await Booking.find();
+  }
+
+  static async findOneAndUpdate(id, update) {
+    return await Booking.findOneAndUpdate({ _id: id }, update, { new: true });
   }
 }
