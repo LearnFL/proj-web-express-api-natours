@@ -29,6 +29,10 @@ export default class ViewController {
     res.status(200).render('login', { title: 'Log into your account' });
   }
 
+  static async getSignUpForm(req, res, next) {
+    res.status(200).render('signup', { title: 'Sign Up' });
+  }
+
   static getAccount(req, res) {
     res.status(200).render('account', { title: 'Your account' });
   }

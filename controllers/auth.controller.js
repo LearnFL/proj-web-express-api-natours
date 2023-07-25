@@ -5,6 +5,7 @@ import UserServices from '../DAO/user.DAO.js';
 import {} from 'dotenv/config';
 import AppError from '../utils/appError.js';
 import Email from '../utils/email.js';
+import { showAlert } from '../public/js/alerts.js';
 
 const signToken = (id) =>
   jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -76,10 +77,11 @@ export default class AuthController {
   }
 
   static logout(req, res, next) {
-    res.cookie('jwt', 'none', {
-      expires: new Date(Date.now() + 10 * 1000),
-      httpOnly: true,
-    });
+    // res.cookie('jwt', 'loggedout', {
+    //   expires: new Date(Date.now() + 10 * 1000),
+    //   httpOnly: true,
+    // });
+    res.clearCookie('jwt');
     res.status(200).json({ status: 'success' });
   }
 
@@ -97,7 +99,8 @@ export default class AuthController {
     }
 
     if (!token) {
-      return next(new AppError('You are not logged in. Please log in.', 401));
+      // return next(new AppError('You are not logged in. Please log in.', 401));
+      return res.redirect('/');
     }
 
     try {
