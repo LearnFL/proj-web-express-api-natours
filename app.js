@@ -81,6 +81,7 @@ app.use(
           'https://bundle.js:*',
           'https://*.cloudflare.com/',
           'https://*.stripe.com/',
+          'wss://shielded-crag-27226-bc9f4c57d930.herokuapp.com:*',
 
           // 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js',
         ],
