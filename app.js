@@ -34,6 +34,16 @@ app.set('views', path.join(__dirname, 'views'));
 
 ///////////////// MIDDLEWARE ////////////////
 
+// FORCE HTTPS
+app.enable('trust proxy');
+app.use(function (request, response, next) {
+  if (process.env.NODE_ENV != 'development' && !request.secure) {
+    return response.redirect('https://' + request.headers.host + request.url);
+  }
+
+  next();
+});
+
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
 // Middleware to modify request, enables server to read amnnd accept JSON in request's body
