@@ -1,6 +1,6 @@
 .env
 .DS_Store
 .parcel-cache/
-public/js/dist/
+# public/js/dist/
 package-lock.json
 node_modules/

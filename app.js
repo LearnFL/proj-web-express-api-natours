@@ -8,6 +8,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import { viewRoute } from './routes/view.route.js';
 import { toursRoute } from './routes/tours.route.js';
 import { usersRoute } from './routes/users.route.js';
@@ -129,6 +130,8 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+
+app.use(compression());
 
 ///////////////// ROUTES ////////////////
 
