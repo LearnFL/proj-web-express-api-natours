@@ -10,7 +10,7 @@ export default class BookingServices {
   }
 
   static async find(id = null) {
-    if (id) return await Booking.find({ user: id });
+    if (id) return await Booking.find(id);
     return await Booking.find();
   }
 

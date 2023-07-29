@@ -66,7 +66,7 @@ export default class ViewController {
   static async getMyTours(req, res, next) {
     // REMEMBER MAY USE VERTUAL POPULATE ON TOURS INSTEAD
     // 1) Find Bookings by user ID
-    const bookings = await BookingServices.find(req.user.id);
+    const bookings = await BookingServices.find({ user: req.user.id });
 
     // 2) Find tours with returned IDs
     const tourIDs = bookings.map((booking) => booking.tour);
