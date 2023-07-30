@@ -75,7 +75,7 @@ export default class ViewController {
     res.status(200).render('overview', { title: 'My Tours', tours });
   }
 
-  static alert(req, res, next) {
+  static alerts(req, res, next) {
     const { alert } = req.query;
     if (alert === 'bookings')
       res.locals.alert =
