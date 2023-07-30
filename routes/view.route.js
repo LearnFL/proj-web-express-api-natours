@@ -6,7 +6,7 @@ import BookingsController from '../controllers/bookings.controller.js';
 const router = new Router();
 
 // router.use(AuthController.isLoggedIn);
-router.use(ViewController.alerts);
+router.use(ViewController.alerts());
 
 router.get(
   '/',
