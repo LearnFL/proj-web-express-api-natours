@@ -166,7 +166,7 @@ export default class BookingsController {
     }
 
     if (event.type === 'checkout.session.completed')
-      this.createBookingCheckout(event.data.object);
+      await this.createBookingCheckout(event.data.object);
     res.status(200).json({ received: true });
   }
 
@@ -174,13 +174,11 @@ export default class BookingsController {
   async createBookingCheckout(session) {
     const tour = session.client_reference_id;
     const price = session.line_items[0].price_data.unit_amount / 100;
-    console.log(tour, price);
     try {
       // return id
       const user = (
         await UserServices.findOneUser(session.customer_email, false)
       ).id;
-      console.log(user);
       await BookingServices.create({ tour, user, price });
     } catch (err) {
       // console.error(err);
