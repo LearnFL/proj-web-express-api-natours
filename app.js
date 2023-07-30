@@ -78,7 +78,8 @@ app.use(
     limit: '10kb',
   })
 );
-// app.use(express.json({ limit: '10kb' }));
+
+// app.use(express.json({ limit: '10kb' })); MAY USE THIS AND BODYPARSER>RAW
 
 // Stripe web hook must be defined here as body that stripe needs to be RAW, so it should be before parsing JSON
 app.post(

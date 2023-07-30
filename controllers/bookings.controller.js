@@ -25,8 +25,10 @@ export default class BookingsController {
         //   req.params.tourId
         // }&user=${req.user.id}&price=${tour.price}`,
 
-        // NOTE FIXED BUG DESCRIBED ABOVE
-        success_url: `${req.protocol}://${req.get('host')}/my-tours`,
+        // NOTE FIXED BUG DESCRIBED ABOVE. Add alert as a workaround to displaying booking alert
+        success_url: `${req.protocol}://${req.get(
+          'host'
+        )}/my-tours?alert=booking`,
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         customer_email: req.user.email,
         client_reference_id: req.params.tourId, // to create booking in DB
@@ -170,12 +172,10 @@ export default class BookingsController {
         const tour = session.client_reference_id;
         const price = session.amount_total / 100;
 
-        console.log(tour, price, session.customer_email);
-
         // return id
         const user = (await UserServices.findOneByEmail(session.customer_email))
           .id;
-        console.log('UUUSSSERRR', user);
+
         await BookingServices.create({ tour, user, price });
       }
 
@@ -185,16 +185,16 @@ export default class BookingsController {
     }
   }
 
-  // Not a middleware
-  static async createBookingCheckout(session) {
-    const tour = session.client_reference_id;
-    const price = session.amount_total / 100;
+  // // Not a middleware
+  // static async createBookingCheckout(session) {
+  //   const tour = session.client_reference_id;
+  //   const price = session.amount_total / 100;
 
-    console.log(tour, price, session.customer_email);
+  //   console.log(tour, price, session.customer_email);
 
-    // return id
-    const user = (await UserServices.findOneByEmail(session.customer_email)).id;
-    console.log('UUUSSSERRR', user);
-    await BookingServices.create({ tour, user, price });
-  }
+  //   // return id
+  //   const user = (await UserServices.findOneByEmail(session.customer_email)).id;
+  //   console.log('UUUSSSERRR', user);
+  //   await BookingServices.create({ tour, user, price });
+  // }
 }

@@ -74,4 +74,12 @@ export default class ViewController {
 
     res.status(200).render('overview', { title: 'My Tours', tours });
   }
+
+  static alert(req, res, next) {
+    const { alert } = req.query;
+    if (alert === 'bookings')
+      res.locals.alert =
+        'Your booking has been successfull, please check your email. If your booking does not show up immediately, please check again later.';
+    next();
+  }
 }

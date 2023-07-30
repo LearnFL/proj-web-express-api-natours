@@ -163,7 +163,7 @@ export default class AuthController {
       // 5) Allow Exccess
       req.user = currentUser;
 
-      // 6) GIve template access to user
+      // 6) Give ALL template access to user
       res.locals.user = currentUser;
       next();
     } catch (err) {

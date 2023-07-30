@@ -7,6 +7,7 @@ import { signup } from './signup.js';
 import { updateSettings } from './updateSettings.js';
 import { resetPassword } from './resetPassword.js';
 import { bookTour } from './stripe.js';
+import { showAlert } from './alerts.js';
 
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
@@ -16,6 +17,7 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const resetPasswordForm = document.querySelector('.form--reset-password');
 const bookBtn = document.getElementById('book-tour');
+const alert = document.querySelector('body').dataset.alert;
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -111,4 +113,8 @@ if (bookBtn) {
     */
     await bookTour(tourId);
   });
+}
+
+if (alert) {
+  showAlert('success', alert, 15000);
 }
