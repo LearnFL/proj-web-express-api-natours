@@ -175,19 +175,16 @@ export default class BookingsController {
   }
 
   // Not a middleware
-  async createBookingCheckout(session) {
+  static async createBookingCheckout(session) {
     const tour = session.client_reference_id;
     const price = session.amount_total / 100;
+
     console.log(tour, price, session.customer_email);
-    try {
-      // return id
-      const user = (
-        await UserServices.findOneUser(session.customer_email, false)
-      ).id;
-      await BookingServices.create({ tour, user, price });
-    } catch (err) {
-      // console.error(err);
-      return new AppError(err.message, 500);
-    }
+
+    // return id
+    const user = (await UserServices.findOneUser(session.customer_email, false))
+      .id;
+
+    await BookingServices.create({ tour, user, price });
   }
 }

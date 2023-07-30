@@ -40,11 +40,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 // FORCE HTTPS
 app.enable('trust proxy');
+
 app.use(function (request, response, next) {
   if (process.env.NODE_ENV != 'development' && !request.secure) {
     return response.redirect('https://' + request.headers.host + request.url);
   }
-
   next();
 });
 
@@ -66,13 +66,6 @@ app.options('*', cors());
  
  app.use(cors({origin: 'https://www.natours.com}))
  */
-
-// Stripe web hook must be defined here as body that stripe needs to be RAW, so it should be before parsing JSON
-app.post(
-  '/webhook-checkout',
-  bodyParser.raw({ type: 'application/json' }),
-  BookingsController.webhookCheckout
-);
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
@@ -143,6 +136,13 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter); // apply to api root
+
+// Stripe web hook must be defined here as body that stripe needs to be RAW, so it should be before parsing JSON
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: '*/*' }),
+  BookingsController.webhookCheckout
+);
 
 // Data sanitization against NoSQL query injection (filters out dots and $ signs)
 app.use(mongoSanitize());
