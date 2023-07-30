@@ -178,8 +178,9 @@ export default class BookingsController {
     const price = session.line_items[0].price_data.unit_amount / 100;
     try {
       // return id
-      const user = await UserServices.findOneUser(session.customer_email, false)
-        .id;
+      const user = (
+        await UserServices.findOneUser(session.customer_email, false)
+      ).id;
       await BookingServices.create({ tour, user, price });
     } catch (err) {
       // console.error(err);
