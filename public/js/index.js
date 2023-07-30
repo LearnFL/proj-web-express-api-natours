@@ -17,7 +17,7 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const resetPasswordForm = document.querySelector('.form--reset-password');
 const bookBtn = document.getElementById('book-tour');
-const alert = document.querySelector('body').dataset.alert;
+const alertMessage = document.querySelector('body').dataset.alert;
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -115,6 +115,6 @@ if (bookBtn) {
   });
 }
 
-if (alert) {
-  showAlert('success', alert, 15000);
+if (alertMessage) {
+  showAlert('success', alertMessage, 15000);
 }
