@@ -12,6 +12,7 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
+/*  
 const createAndSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
@@ -20,13 +21,24 @@ const createAndSendToken = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    //send only via hhtps, activate in production only
-    ...(process.env.NODE_ENV === 'production' && { secure: true }), //eslint-disable-line
-    /* httpOnly: true, limit browsers access, browsers can't change this cookie
-    TO implement logout functionally, we need to create a new cookie with the same name
-    and without value  */
+
+    
+    // Send only via hhtps, activate in production only. The problem is not all deployed apps set Environment and it represents security vulnerability.
+    // It is ok for development. For this reason we will use req.secure that ensures that the connection is secure.  
+    
+    // ...(process.env.NODE_ENV === 'production' && { secure: true }), //eslint-disable-line
+
+    //httpOnly: true, limit browsers access, browsers can't change this cookie
+    //TO implement logout functionally, we need to create a new cookie with the same name
+    //and without value  
     httpOnly: true,
   };
+
+  // Heroku modifies all requests that is why must add req.headers('x-forwarded-proto') === 'https'
+  // Must add Trust proxy as Heroku acts like proxy and req.secure will not work unless trusting proxy. 
+  // It will allow header be properly set
+  if (req.secure || req.headers['x-forwarded-proto'] === 'https')
+    cookieOptions.secure = true;
 
   // Remove password from output
   user.password = undefined;
@@ -39,6 +51,30 @@ const createAndSendToken = (user, statusCode, res) => {
     .json({ status: 'success', token, data: { user: user } });
 };
 
+*/
+
+const createAndSendToken = (user, statusCode, req, res) => {
+  const token = signToken(user._id);
+
+  res.cookie('jwt', token, {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https', // if true it will return true
+  });
+
+  // Remove password from output
+  user.password = undefined;
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
 export default class AuthController {
   static async signup(req, res, next) {
     try {
@@ -47,7 +83,7 @@ export default class AuthController {
 
       const url = `${req.protocol}://${req.get('host')}/me`;
       await new Email(newUser, url).sendWelcome();
-      createAndSendToken(newUser, 201, res);
+      createAndSendToken(newUser, 201, req, res);
     } catch (err) {
       next(err);
     }
@@ -72,6 +108,7 @@ export default class AuthController {
     createAndSendToken(
       { _id: user._id, name: user.name, email: user.email },
       200,
+      req,
       res
     );
   }
@@ -211,7 +248,7 @@ export default class AuthController {
         );
       }
 
-      createAndSendToken(user, 200, res);
+      createAndSendToken(user, 200, req, res);
 
       //   res.status(200).json({
       //     status: 'success',
@@ -277,7 +314,7 @@ export default class AuthController {
       await user.save(); // must use save so all validation runs
 
       // 4) Log user in and send token
-      createAndSendToken(user, 200, res);
+      createAndSendToken(user, 200, req, res);
     } catch (err) {
       next(err);
     }

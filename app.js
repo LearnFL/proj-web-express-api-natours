@@ -21,6 +21,8 @@ import globalErrorHandler from './controllers/error.controller.js';
 
 export const app = express();
 
+app.enable('trust proxy');
+
 ///////////////// STATIC FOLDER ////////////////
 
 const __dirname = currDir();
