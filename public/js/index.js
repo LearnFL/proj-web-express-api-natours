@@ -116,5 +116,5 @@ if (bookBtn) {
 }
 
 if (alertMessage) {
-  showAlert('success', alertMessage, 15000);
+  showAlert('success', alertMessage, 10000);
 }
