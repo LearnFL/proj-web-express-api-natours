@@ -173,7 +173,7 @@ export default class BookingsController {
   }
 
   // Not a middleware
-  static async createBookingCheckout(session) {
+  async createBookingCheckout(session) {
     const tour = session.client_reference_id;
     const price = session.amount_total / 100;
     try {
