@@ -67,6 +67,13 @@ app.options('*', cors());
  app.use(cors({origin: 'https://www.natours.com}))
  */
 
+// Stripe web hook must be defined here as body that stripe needs to be RAW, so it should be before parsing JSON
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: '*/*' }),
+  BookingsController.webhookCheckout
+);
+
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
 // Middleware to modify request, enables server to read amnnd accept JSON in request's body
@@ -136,13 +143,6 @@ const limiter = rateLimit({
 });
 
 app.use('/api', limiter); // apply to api root
-
-// Stripe web hook must be defined here as body that stripe needs to be RAW, so it should be before parsing JSON
-app.post(
-  '/webhook-checkout',
-  bodyParser.raw({ type: '*/*' }),
-  BookingsController.webhookCheckout
-);
 
 // Data sanitization against NoSQL query injection (filters out dots and $ signs)
 app.use(mongoSanitize());

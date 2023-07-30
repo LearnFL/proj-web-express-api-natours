@@ -159,7 +159,7 @@ export default class BookingsController {
     let event;
     try {
       event = stripe.webhooks.constructEvent(
-        req.body,
+        JSON.stringify(req.body),
         signature,
         process.env.STRIPE_WEBHOOK_SECRET
       );
