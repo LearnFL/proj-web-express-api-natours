@@ -10,7 +10,7 @@ const router = new Router();
 router.get(
   '/',
   AuthController.isLoggedIn,
-  BookingsController.createBookingCheckout, //temporary untill site is deployed
+  // BookingsController.createBookingCheckout, //temporary untill site is deployed
   ViewController.getOverview
 );
 router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour);

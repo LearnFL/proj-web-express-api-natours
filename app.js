@@ -15,6 +15,7 @@ import { toursRoute } from './routes/tours.route.js';
 import { usersRoute } from './routes/users.route.js';
 import { reviewsRoute } from './routes/reviews.route.js';
 import { bookingsRoute } from './routes/bookings.route.js';
+import BookingsController from './controllers/bookings.controller.js';
 import { currDir } from './helper.js';
 import {} from 'dotenv/config';
 import AppError from './utils/appError.js';
@@ -65,6 +66,13 @@ app.options('*', cors());
  
  app.use(cors({origin: 'https://www.natours.com}))
  */
+
+// Stripe web hook must be defined here as body that stripe needs to be RAW, so it should be before parsing JSON
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: 'application/json' }),
+  BookingsController.webhookCheckout
+);
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 

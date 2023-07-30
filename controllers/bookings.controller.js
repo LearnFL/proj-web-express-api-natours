@@ -1,5 +1,6 @@
 import AppError from '../utils/appError.js';
 import TourServices from '../DAO/tour.DAO.js';
+import UserServices from '../DAO/user.DAO.js';
 import BookingServices from '../DAO/booking.DAO.js';
 import Stripe from 'stripe';
 
@@ -20,10 +21,14 @@ export default class BookingsController {
         payment_method_types: ['card'],
 
         // FIXME Temp solution, not secure, may call URL without checkout
-        success_url: `${req.protocol}://${req.get('host')}/?tour=${
-          req.params.tourId
-        }&user=${req.user.id}&price=${tour.price}`,
+        // success_url: `${req.protocol}://${req.get('host')}/?tour=${
+        //   req.params.tourId
+        // }&user=${req.user.id}&price=${tour.price}`,
 
+        // NOTE FIXED BUG DESCRIBED ABOVE
+        success_url: `${req.protocol}://${req.get('host')}/my-tours/${
+          tour.slug
+        }`,
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         customer_email: req.user.email,
         client_reference_id: req.params.tourId, // to create booking in DB
@@ -55,25 +60,25 @@ export default class BookingsController {
     }
   }
 
-  static async createBookingCheckout(req, res, next) {
-    try {
-      // REMEMBER THIS IS TEMPORARY, UNSECURE, ONE CAN MAKE BOOKINGS WITHOUT PAYING
-      const { tour, user, price } = req.query;
+  // static async createBookingCheckout(req, res, next) {
+  //   try {
+  //     // REMEMBER THIS IS TEMPORARY, UNSECURE, ONE CAN MAKE BOOKINGS WITHOUT PAYING. FIX WITH WEB HOOKS
+  //     const { tour, user, price } = req.query;
 
-      // NEXT() WILL LOAD HOME PAGE SO IT NEEDS TO BE CALLED FROM VIEWS ROUTE
-      if (!tour && !user && !price) {
-        return next();
-      }
+  //     // NEXT() WILL LOAD HOME PAGE SO IT NEEDS TO BE CALLED FROM VIEWS ROUTE
+  //     if (!tour && !user && !price) {
+  //       return next();
+  //     }
 
-      await BookingServices.create({ tour, user, price });
-      // next(); not ideal as it exposes a lot of datain query from temporary SUCCESS URL
-      // or use `${req.protocol}://${req.get('host')}/?tour=${req.params.tourid}&user=${req.userId}&price=${tour.price}`
-      res.redirect(req.originalUrl.split('?')[0]);
-    } catch (err) {
-      // new AppError(err.message, 500);
-      console.error(err);
-    }
-  }
+  //     await BookingServices.create({ tour, user, price });
+  //     // next(); not ideal as it exposes a lot of datain query from temporary SUCCESS URL
+  //     // or use `${req.protocol}://${req.get('host')}/?tour=${req.params.tourid}&user=${req.userId}&price=${tour.price}`
+  //     res.redirect(req.originalUrl.split('?')[0]);
+  //   } catch (err) {
+  //     // new AppError(err.message, 500);
+  //     console.error(err);
+  //   }
+  // }
 
   static async find(req, res, next) {
     try {
@@ -146,6 +151,39 @@ export default class BookingsController {
       });
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async webhookChekout(req, res, next) {
+    const signature = req.headers['stripe-signature'];
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (err) {
+      return res.status(400).send(`Webhook error: ${err.message}`);
+    }
+
+    if (event.type === 'checkout.session.completed')
+      this.createBookingCheckout(event.data.object);
+    res.status(200).json({ received: true });
+  }
+
+  // Not a middleware
+  static async createBookingCheckout(session) {
+    const tour = session.client_reference_id;
+    const price = session.line_items[0].price_data.unit_amount / 100;
+    try {
+      // return id
+      const user = await UserServices.findOneUser(session.customer_email, false)
+        .id;
+      await BookingServices.create({ tour, user, price });
+    } catch (err) {
+      // console.error(err);
+      return new AppError(err.message, 500);
     }
   }
 }

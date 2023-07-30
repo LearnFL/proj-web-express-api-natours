@@ -13,11 +13,17 @@ export default class UserServices {
     });
   }
 
-  static async findOneUser(email) {
+  // Password false is quick workaround to avoid creating a new method for stripe checkout.
+  static async findOneUser(email, password = true) {
     // must add password to output since by default it is not selected
+    if (password === true)
+      return await User.findOne({
+        email: email,
+      }).select('+password');
+
     return await User.findOne({
       email: email,
-    }).select('+password');
+    });
   }
 
   static async findOneUserById(id) {
