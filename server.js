@@ -22,3 +22,9 @@ process.on('unhandledRejection', (err) => {
   console.log(err.name, err.message);
   server.close(() => process.exit(1));
 });
+
+// Make Heroku Dyno restart gentle, allowing requests to finish
+process.on('SIGTERM', () => {
+  console.log('SIGTERM RECEIVED. Shuttigng down...');
+  server.close(() => console.log('Process terminated'));
+});
