@@ -26,7 +26,7 @@ export default class BookingsController {
         // }&user=${req.user.id}&price=${tour.price}`,
 
         // NOTE FIXED BUG DESCRIBED ABOVE
-        success_url: `${req.protocol}://${req.get('host')}/my-tours/`,
+        success_url: `${req.protocol}://${req.get('host')}/my-tours`,
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         customer_email: req.user.email,
         client_reference_id: req.params.tourId, // to create booking in DB
@@ -152,7 +152,7 @@ export default class BookingsController {
     }
   }
 
-  static async webhookChekout(req, res, next) {
+  static async webhookCheckout(req, res, next) {
     const signature = req.headers['stripe-signature'];
     let event;
     try {
@@ -171,14 +171,16 @@ export default class BookingsController {
   }
 
   // Not a middleware
-  static async createBookingCheckout(session) {
+  async createBookingCheckout(session) {
     const tour = session.client_reference_id;
     const price = session.line_items[0].price_data.unit_amount / 100;
+    console.log(tour, price);
     try {
       // return id
       const user = (
         await UserServices.findOneUser(session.customer_email, false)
       ).id;
+      console.log(user);
       await BookingServices.create({ tour, user, price });
     } catch (err) {
       // console.error(err);
