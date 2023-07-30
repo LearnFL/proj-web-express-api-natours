@@ -9,6 +9,7 @@ import xss from 'xss-clean';
 import hpp from 'hpp';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import cors from 'cors';
 import { viewRoute } from './routes/view.route.js';
 import { toursRoute } from './routes/tours.route.js';
 import { usersRoute } from './routes/users.route.js';
@@ -45,6 +46,25 @@ app.use(function (request, response, next) {
 
   next();
 });
+
+// Cross Origin Resource Sharing
+app.use(cors());
+
+// Options req method on all routes
+app.options('*', cors());
+
+/*
+ app.use(cors()); is good for simple requests (get, post). For other request browser issues preflight phase,
+ to figure out if req is safe to send (Options request) and we need to handle it and send allow origin.
+
+ app.options('*', cors());
+
+ May add in middleware stack app.use('/api/v1/users', cors(), usersRoute);
+
+ Or specify url
+ 
+ app.use(cors({origin: 'https://www.natours.com}))
+ */
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
 
