@@ -71,7 +71,7 @@ app.options('*', cors());
 app.post(
   '/webhook-checkout',
   bodyParser.raw({ type: 'application/json' }),
-  BookingsController.webhookCheckout
+  BookingsController.webhookChekout
 );
 
 app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
