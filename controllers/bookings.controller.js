@@ -40,7 +40,9 @@ export default class BookingsController {
                 name: `${tour.name} Tour`,
                 description: tour.summary,
                 images: [
-                  `https://www.natours.dev/img/tours/${tour.imageCover}`,
+                  `${req.protocol}://${req.get('host')}/img/tours/${
+                    tour.imageCover
+                  }`,
                 ], // must use live images hosted online
               },
             },
@@ -163,9 +165,9 @@ export default class BookingsController {
       );
 
       if (event.type === 'checkout.session.completed') {
-        console.log(event.data.object);
         await this.createBookingCheckout(event.data.object);
       }
+
       res.status(200).json({ received: true });
     } catch (err) {
       return res.status(400).send(`Webhook error: ${err.message}`);
@@ -176,6 +178,7 @@ export default class BookingsController {
   async createBookingCheckout(session) {
     const tour = session.client_reference_id;
     const price = session.amount_total / 100;
+    console.log(tour, price, session.customer_email);
     try {
       // return id
       const user = (
