@@ -16,11 +16,13 @@ export default class UserServices {
   // Password false is quick workaround to avoid creating a new method for stripe checkout.
   static async findOneUser(email, password = true) {
     // must add password to output since by default it is not selected
-    if (password === true)
-      return await User.findOne({
-        email: email,
-      }).select('+password');
+    return await User.findOne({
+      email: email,
+    }).select('+password');
+  }
 
+  static async findOneByEmail(email) {
+    // must add password to output since by default it is not selected
     return await User.findOne({
       email: email,
     });

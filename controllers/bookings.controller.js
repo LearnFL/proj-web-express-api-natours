@@ -6,20 +6,6 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Not a middleware
-async function createBookingCheckout(session) {
-  const tour = session.client_reference_id;
-  const price = session.amount_total / 100;
-
-  console.log(tour, price, session.customer_email);
-
-  // return id
-  const user = (await UserServices.findOneUser(session.customer_email, false))
-    .id;
-
-  await BookingServices.create({ tour, user, price });
-}
-
 export default class BookingsController {
   static async getCheckoutSession(req, res, next) {
     try {
@@ -179,12 +165,25 @@ export default class BookingsController {
       );
 
       if (event.type === 'checkout.session.completed') {
-        await createBookingCheckout(event.data.object);
+        await this.createBookingCheckout(event.data.object);
       }
 
       res.status(200).json({ received: true });
     } catch (err) {
       return res.status(400).send(`Webhook error: ${err.message}`);
     }
+  }
+
+  // Not a middleware
+  static async createBookingCheckout(session) {
+    const tour = session.client_reference_id;
+    const price = session.amount_total / 100;
+
+    console.log(tour, price, session.customer_email);
+
+    // return id
+    const user = (await UserServices.findOneByEmail(session.customer_email)).id;
+    console.log('UUUSSSERRR', user);
+    await BookingServices.create({ tour, user, price });
   }
 }
