@@ -77,7 +77,7 @@ export default class ViewController {
 
   static alerts(req, res, next) {
     const { alert } = req.query;
-    if (alert === 'bookings')
+    if (alert === 'booking')
       res.locals.alert =
         'Your booking has been successfull, please check your email. If your booking does not show up immediately, please check again later.';
     next();
