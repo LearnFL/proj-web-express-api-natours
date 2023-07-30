@@ -162,9 +162,10 @@ export default class BookingsController {
         process.env.STRIPE_WEBHOOK_SECRET
       );
 
-      if (event.type === 'checkout.session.completed')
+      if (event.type === 'checkout.session.completed') {
         console.log(event.data.object);
-      await this.createBookingCheckout(event.data.object);
+        await this.createBookingCheckout(event.data.object);
+      }
       res.status(200).json({ received: true });
     } catch (err) {
       return res.status(400).send(`Webhook error: ${err.message}`);
@@ -174,7 +175,7 @@ export default class BookingsController {
   // Not a middleware
   static async createBookingCheckout(session) {
     const tour = session.client_reference_id;
-    const price = session.line_items[0].price_data.unit_amount / 100;
+    const price = session.amount_total / 100;
     try {
       // return id
       const user = (
