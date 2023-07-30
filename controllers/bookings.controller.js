@@ -161,17 +161,18 @@ export default class BookingsController {
         signature,
         process.env.STRIPE_WEBHOOK_SECRET
       );
+
+      if (event.type === 'checkout.session.completed')
+        console.log(event.data.object);
+      await this.createBookingCheckout(event.data.object);
+      res.status(200).json({ received: true });
     } catch (err) {
       return res.status(400).send(`Webhook error: ${err.message}`);
     }
-
-    if (event.type === 'checkout.session.completed')
-      await this.createBookingCheckout(event.data.object);
-    res.status(200).json({ received: true });
   }
 
   // Not a middleware
-  async createBookingCheckout(session) {
+  static async createBookingCheckout(session) {
     const tour = session.client_reference_id;
     const price = session.line_items[0].price_data.unit_amount / 100;
     try {
