@@ -7,7 +7,7 @@ Practicing web development.<br>
 NodeJS, ExpressJS, MongoDB, restfull API based application. This application implements signup, login, booking, payment, file uploads, and email features. However, it is only optimized for desktop use and features are limited to listed above due to the time-consuming nature of the task. Some extra features are available through API calls only. Visit
 
 ## Visit live page
-[See live page](https://shielded-crag-27226-bc9f4c57d930.herokuapp.com)
+[See live page] (https://shielded-crag-27226-bc9f4c57d930.herokuapp.com)
 
 ## Screenshots
 <img width="1477" alt="Screenshot 2023-09-06 at 6 12 20 PM" src="https://github.com/LearnFL/proj-web-express-api-natours/assets/86169204/84940e20-f754-4e42-86d0-fb952dced3f2">
