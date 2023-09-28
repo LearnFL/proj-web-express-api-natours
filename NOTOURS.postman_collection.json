@@ -1,0 +1,764 @@
+{
+	"info": {
+		"_postman_id": "bbff9ff9-7e2c-4d67-8880-45237ca5fc16",
+		"name": "NOTOURS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "23311543"
+	},
+	"item": [
+		{
+			"name": "Tours",
+			"item": [
+				{
+					"name": "Create new tour",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "genres",
+								"value": "Action",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n\n    {\n                \"startLocation\": {\n                    \"type\": \"Point\",\n                    \"coordinates\": [\n                        -80.185942,\n                        25.774772\n                    ],\n                    \"address\": \"301 Biscayne Blvd, Miami, FL 33132, USA\",\n                    \"description\": \"Miami, USA\"\n                },\n                \"name\": \"My test tour\",\n                \"duration\": 7,\n                \"maxGroupSize\": 15,\n                \"difficulty\": \"medium\",\n                \"ratingsAverage\": 4.8,\n                \"ratingsQuantity\": 6,\n                \"price\": 497,\n                \"summary\": \"Exploring the jaw-dropping US east coast by foot and by boat\",\n                \"description\": \"Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\\nIrure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\",\n                \"imageCover\": \"tour-2-cover.jpg\",\n                \"images\": [\n                    \"tour-2-1.jpg\",\n                    \"tour-2-2.jpg\",\n                    \"tour-2-3.jpg\"\n                ],\n                \"startDates\": [\n                    \"2021-06-19T09:00:00.000Z\",\n                    \"2021-07-20T09:00:00.000Z\",\n                    \"2021-08-18T09:00:00.000Z\"\n                ],\n                \"secretTour\": false,\n                \"locations\": [\n                    {\n                        \"type\": \"Point\",\n                        \"coordinates\": [\n                            -80.128473,\n                            25.781842\n                        ],\n                        \"description\": \"Lummus Park Beach\",\n                        \"day\": 1,\n                        \"_id\": \"5c88fa8cf4afda39709c2959\"\n                    },\n                    {\n                        \"type\": \"Point\",\n                        \"coordinates\": [\n                            -80.647885,\n                            24.909047\n                        ],\n                        \"description\": \"Islamorada\",\n                        \"day\": 2,\n                        \"_id\": \"5c88fa8cf4afda39709c2958\"\n                    },\n                    {\n                        \"type\": \"Point\",\n                        \"coordinates\": [\n                            -81.0784,\n                            24.707496\n                        ],\n                        \"description\": \"Sombrero Beach\",\n                        \"day\": 3,\n                        \"_id\": \"5c88fa8cf4afda39709c2957\"\n                    },\n                    {\n                        \"type\": \"Point\",\n                        \"coordinates\": [\n                            -81.768719,\n                            24.552242\n                        ],\n                        \"description\": \"West Key\",\n                        \"day\": 5,\n                        \"_id\": \"5c88fa8cf4afda39709c2956\"\n                    }\n                ],\n                \"slug\": \"the-sea-explorer\",\n                \"durationWeeks\": \"1.0\",\n                \"guides\": [\n                    \"644e8feeb75c2be4184174d7\",\n                    \"6452fa79ecf571f02459338e\"\n                ]\n\n            }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/tours",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tours"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "title=super",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Use this ednpoint to login."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tours",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/tours?price[lt]=1000&ratingsAverage[gte]=4.7",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tours"
+							],
+							"query": [
+								{
+									"key": "price[lt]",
+									"value": "1000"
+								},
+								{
+									"key": "ratingsAverage[gte]",
+									"value": "4.7"
+								}
+							]
+						},
+						"description": "Use this ednpoint to get all tours."
+					},
+					"response": []
+				},
+				{
+					"name": "Ref Get All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "www.natours.dev/api/v1/tours"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tour By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/64832b4ac829a5c695903ff8",
+						"description": "Use this ednpoint to get a single tour by id."
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Tour",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"guides\": [\n                \"644e8feeb75c2be4184174d7\"\n            ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/v1/tours/5c88fa8cf4afda39709c2951",
+						"description": "Use this ednpoint to make changes to a tour. Restricted to admins and lead-guide."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tour",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/6462ca328415fcb7d42aed22",
+						"description": "Use this ednpoint to delete a tour. Restricted to admins and lead-guides."
+					},
+					"response": []
+				},
+				{
+					"name": "TOursAggregate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/tour-stats"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Monthly Plan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/monthly-plan/2021"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tour Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/tour-stats"
+					},
+					"response": []
+				},
+				{
+					"name": "Tours Within",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/tours-within/400/center/34.005571, -118.269605/unit/mi"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Distances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/distances/34.005571, -118.269605/unit/mi"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/users/"
+					},
+					"response": []
+				},
+				{
+					"name": "SignUp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"tttthtyruyttttttt\",\n    \"email\":\"ttyhgjghfghcxggtvxljtut@gmail.com\",\n    \"password\":\"123456789\",\n    \"passwordConfirm\": \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/users/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/users/23"
+					},
+					"response": []
+				},
+				{
+					"name": "Update USer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Adminchikuuu\"\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/users/644e8feeb75c2be4184174d7"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{URL}}/api/v1/users/23"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{URL}}/api/v1/users/login"
+					},
+					"response": []
+				},
+				{
+					"name": "ForgotPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"admin@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/users/forgotPassword"
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"987654321\",\n    \"passwordConfirm\": \"987654321\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/users/resetPassword/0995d3dd296a75d3176fc51c0d9c5ee21d51334ff68e93abf3c96ef9551baa05"
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Paasword",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"passwordCurrent\": \"123456789\",\n    \"password\": \"123456789\",\n    \"passwordConfirm\": \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/users/updateMyPassword"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Adminchikuuu\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/users/updateMe"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{URL}}/api/v1/users/deleteMe"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Administrator\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/v1/users/644e8feeb75c2be4184174d7"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/users/6452f90050a61e966c7c24c4"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "Get All Reviews",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/reviews/"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"review\": \"Very nice tour!!!\",\n    \"rating\": 5,\n    \"tour\": \"64832b4ac829a5c695903ff8\",\n    \"user\": \"6452fa031ceb9d6a94dcfad0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/reviews"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/reviews/647b565cc7bab1293167b725"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n     \"rating\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/reviews/647ca6e41f4ee1991b6f2e22"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{URL}}/api/v1/reviews/647c9f2a6cc0bf2c37840d05"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tours/Reviews",
+			"item": [
+				{
+					"name": "Nested Create Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"review\": \"!!!Amazing tour!!!!!\",\n    \"rating\": 5,\n    \"user\": \"644e8cd7a81323096fdfa871\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{URL}}/api/v1/tours/5c88fa8cf4afda39709c2955/reviews"
+					},
+					"response": []
+				},
+				{
+					"name": "Nested Get Reviews",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{URL}}/api/v1/tours/64832b4ac829a5c695903ff8/reviews"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
